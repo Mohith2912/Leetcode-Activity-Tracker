@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeetTrace - Premium LeetCode Analytics Dashboard</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/loading.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/topics.css">
+  <link rel="stylesheet" href="css/heatmap.css">
+  <link rel="stylesheet" href="css/submissions.css">
+</head>
+<body>
+  <!-- Background Glow FX -->
+  <div class="glow-bg">
+    <div class="glow-sphere glow-sphere-1"></div>
+    <div class="glow-sphere glow-sphere-2"></div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="app-container">
+
+    <!-- 1. LOGIN SCREEN -->
+    <section id="login-screen" class="screen active">
+      <div class="login-card glass-panel">
+        <div class="login-header">
+          <div class="logo-icon">
+            <i data-lucide="activity"></i>
+          </div>
+          <h1>LeetTrace</h1>
+          <p class="subtitle">Check and visualize any LeetCode user's daily activity, heatmap, and solved difficulty stats.</p>
+        </div>
+
+        <form id="login-form">
+          <div class="input-group">
+            <label for="username-input">LeetCode Username</label>
+            <div class="input-wrapper">
+              <i data-lucide="user" class="input-icon"></i>
+              <input type="text" id="username-input" placeholder="e.g. alfaarghya" required autocomplete="off">
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary" id="fetch-btn">
+            <span>Fetch Statistics</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="login-divider">
+          <span>or</span>
+        </div>
+
+        <button class="btn btn-secondary" id="demo-btn">
+          <i data-lucide="eye"></i>
+          <span>View Demo Dashboard</span>
+        </button>
+
+        <div id="login-error" class="error-msg hidden">
+          <i data-lucide="alert-circle"></i>
+          <span id="error-text">Failed to fetch. Please check username or try again later.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. LOADING SCREEN -->
+    <section id="loading-screen" class="screen">
+      <div class="loading-wrapper">
+        <div class="spinner">
+          <div class="spinner-ring"></div>
+          <i data-lucide="activity" class="spinner-icon"></i>
+        </div>
+        <h3>Fetching LeetCode Metrics...</h3>
+        <p class="loading-sub">Connecting to LeetCode API, gathering solved questions, tags, and contribution calendar.</p>
+        
+        <div class="skeleton-container">
+          <div class="skeleton-card" style="height: 120px;"></div>
+          <div class="skeleton-card" style="height: 250px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. DASHBOARD SCREEN -->
+    <section id="dashboard-screen" class="screen">
+      <!-- Navbar -->
+      <header class="navbar glass-panel">
+        <div class="nav-brand">
+          <div class="brand-logo">
+            <i data-lucide="activity"></i>
+          </div>
+          <span class="brand-name">LeetTrace</span>
+        </div>
+        
+        <div class="nav-actions">
+          <div id="api-status-indicator" class="status-tag">
+            <span class="status-dot green"></span>
+            <span class="status-text">Live API Data</span>
+          </div>
+          <button class="btn btn-nav" id="logout-btn">
+            <i data-lucide="log-out"></i>
+            <span>Exit Dashboard</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Dashboard Grid -->
+      <main class="dashboard-grid">
+        
+        <!-- LEFT COLUMN (Profile, Difficulty, Solved Topics) -->
+        <div class="dash-col dash-col-left">
+          
+          <!-- Profile Card -->
+          <div class="glass-panel card profile-card">
+            <div class="profile-main">
+              <div class="avatar-container">
+                <img id="user-avatar" src="https://assets.leetcode.com/users/default_avatar.png" alt="Avatar">
+                <div class="active-pulse"></div>
+              </div>
+              <div class="profile-info">
+                <h2 id="user-name">Arghya Das</h2>
+                <p id="user-username">@alfaarghya</p>
+                <div class="profile-meta-tags">
+                  <span id="user-country-tag" class="meta-tag"><i data-lucide="map-pin"></i><span id="user-country">India</span></span>
+                  <span id="user-school-tag" class="meta-tag"><i data-lucide="graduation-cap"></i><span id="user-school">The Neotia University</span></span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="profile-stats-grid">
+              <div class="p-stat-box">
+                <span class="p-stat-label">Global Rank</span>
+                <span class="p-stat-val" id="user-rank">163,075</span>
+              </div>
+              <div class="p-stat-box">
+                <span class="p-stat-label">Reputation</span>
+                <span class="p-stat-val" id="user-reputation">42</span>
+              </div>
+              <div class="p-stat-box">
+                <span class="p-stat-label">Current Streak</span>
+                <span class="p-stat-val streak-val"><i data-lucide="flame"></i> <span id="user-streak">5</span>d</span>
+              </div>
+              <div class="p-stat-box">
+                <span class="p-stat-label">Active Days</span>
+                <span class="p-stat-val" id="user-active-days">31</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Difficulty Progress Card -->
+          <div class="glass-panel card difficulty-card">
+            <h3>Problem Statistics</h3>
+            
+            <div class="diff-flex-container">
+              <!-- Circular Total Progress -->
+              <div class="circle-progress-wrapper">
+                <svg class="progress-ring" width="140" height="140">
+                  <circle class="progress-ring-circle-bg" stroke="rgba(255, 255, 255, 0.05)" stroke-width="10" fill="transparent" r="58" cx="70" cy="70"/>
+                  <circle id="progress-ring-active" class="progress-ring-circle-active" stroke="url(#active-gradient)" stroke-width="10" fill="transparent" r="58" cx="70" cy="70" stroke-linecap="round"/>
+                  <defs>
+                    <linearGradient id="active-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#6366f1" />
+                      <stop offset="100%" stop-color="#06b6d4" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="circle-center-text">
+                  <span id="total-solved-num" class="solved-count">540</span>
+                  <span class="solved-label">Solved</span>
+                </div>
+              </div>
+
+              <!-- Difficulty Meters -->
+              <div class="difficulty-meters">
+                <!-- Easy Meter -->
+                <div class="meter-box easy">
+                  <div class="meter-label-row">
+                    <span class="diff-title">Easy</span>
+                    <span class="diff-fraction"><span id="easy-solved">200</span><span class="total-avail"> / <span id="easy-total">946</span></span></span>
+                  </div>
+                  <div class="meter-bar-container">
+                    <div id="easy-bar" class="meter-fill" style="width: 21.1%;"></div>
+                  </div>
+                  <div class="meter-percentage" id="easy-percent">21.1%</div>
+                </div>
+
+                <!-- Medium Meter -->
+                <div class="meter-box medium">
+                  <div class="meter-label-row">
+                    <span class="diff-title">Medium</span>
+                    <span class="diff-fraction"><span id="medium-solved">288</span><span class="total-avail"> / <span id="medium-total">1,600</span></span></span>
+                  </div>
+                  <div class="meter-bar-container">
+                    <div id="medium-bar" class="meter-fill" style="width: 18%;"></div>
+                  </div>
+                  <div class="meter-percentage" id="medium-percent">18.0%</div>
+                </div>
+
+                <!-- Hard Meter -->
+                <div class="meter-box hard">
+                  <div class="meter-label-row">
+                    <span class="diff-title">Hard</span>
+                    <span class="diff-fraction"><span id="hard-solved">52</span><span class="total-avail"> / <span id="hard-total">780</span></span></span>
+                  </div>
+                  <div class="meter-bar-container">
+                    <div id="hard-bar" class="meter-fill" style="width: 6.6%;"></div>
+                  </div>
+                  <div class="meter-percentage" id="hard-percent">6.6%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Solved Topics Card (Bottom Left) -->
+          <div class="glass-panel card topics-card">
+            <div class="topics-header">
+              <h3>Solved Topics</h3>
+              <div class="search-filter">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="topic-search" placeholder="Search topics...">
+              </div>
+            </div>
+            
+            <!-- Category Tabs -->
+            <div class="topics-tabs">
+              <button class="tab-btn active" data-tab="all">All</button>
+              <button class="tab-btn" data-tab="fundamental">Fundamental</button>
+              <button class="tab-btn" data-tab="intermediate">Intermediate</button>
+              <button class="tab-btn" data-tab="advanced">Advanced</button>
+            </div>
+            
+            <div class="topics-content-wrapper scrollable-y">
+              <div id="topics-grid" class="topics-grid">
+                <!-- Badges will be rendered dynamically here -->
+              </div>
+              <div id="topics-empty" class="empty-state hidden">
+                <i data-lucide="folder-open"></i>
+                <p>No matching topics found.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        
+        <!-- RIGHT COLUMN (Heatmap & Submissions) -->
+        <div class="dash-col dash-col-right">
+          
+          <!-- Heatmap Card (Daily Activity of Last 5 Months) -->
+          <div class="glass-panel card heatmap-card">
+            <div class="heatmap-header">
+              <div class="heatmap-title-row">
+                <div class="title-with-icon">
+                  <i data-lucide="calendar" class="section-icon"></i>
+                  <h3>Activity Heatmap</h3>
+                </div>
+                <span class="time-range-tag">Last 5 Months</span>
+              </div>
+              
+              <div class="heatmap-summary">
+                <div class="summary-metric">
+                  <span class="metric-val" id="heatmap-total-solved">14</span>
+                  <span class="metric-label">submissions in last 5 months</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- The Heatmap Grid -->
+            <div class="heatmap-container-outer">
+              <div class="heatmap-labels-days">
+                <span>Mon</span>
+                <span>Wed</span>
+                <span>Fri</span>
+              </div>
+              
+              <div class="heatmap-grid-wrapper">
+                <div class="heatmap-months-header" id="heatmap-months-labels">
+                  <!-- Month labels will be dynamically aligned -->
+                </div>
+                <div class="heatmap-grid" id="heatmap-cells-grid">
+                  <!-- 5 months of cells will be dynamically injected -->
+                </div>
+              </div>
+            </div>
+            
+            <div class="heatmap-footer">
+              <span class="heatmap-tip"><i data-lucide="info"></i> Hover over a square to see submissions</span>
+              <div class="heatmap-legend">
+                <span>Less</span>
+                <span class="legend-cell level-0"></span>
+                <span class="legend-cell level-1"></span>
+                <span class="legend-cell level-2"></span>
+                <span class="legend-cell level-3"></span>
+                <span class="legend-cell level-4"></span>
+                <span>More</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Submissions Card -->
+          <div class="glass-panel card submissions-card">
+            <div class="submissions-header">
+              <div class="title-with-icon">
+                <i data-lucide="history" class="section-icon"></i>
+                <h3>Recent Submissions</h3>
+              </div>
+            </div>
+            
+            <div class="submissions-list scrollable-y" id="submissions-list">
+              <!-- Dynamic items -->
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </section>
+
+  </div>
+
+  <!-- Heatmap Tooltip -->
+  <div id="heatmap-tooltip" class="tooltip hidden">
+    <div class="tooltip-date">May 28, 2026</div>
+    <div class="tooltip-value">0 submissions</div>
+  </div>
+
+  <!-- Custom Scripts -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
